@@ -1,0 +1,273 @@
+<!-- Prices Modal - Large Bootstrap Modal for Flight Fares -->
+<div class="modal fade" id="pricesModal" tabindex="-1" aria-labelledby="pricesModalLabel" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+      <!-- Header -->
+      <div class="modal-header" style="background: linear-gradient(135deg, #1c1450 0%, #2a1b5a 100%); color: white; border-radius: 20px 20px 0 0; padding: 25px 30px; border: none;">
+        <h5 class="modal-title fw-bold fs-4 mb-0" id="pricesModalLabel">
+          Flight Details and Fare Options available for you!
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div id="modalFaresContent">
+          <!-- Dynamic fare cards will be populated here by JS -->
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+            <p>Loading fare options...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer with BOOK NOW -->
+      <div class="modal-footer border-0 p-4 justify-content-end">
+        <button type="button" class="btn btn-warning fw-bold fs-5 px-5 py-3" id="modalBookNow" style="
+          background-color: #fae013 !important; 
+          border-color: #fae013 !important; 
+          color: #1c1450 !important; 
+          border-radius: 50px; 
+          box-shadow: 0 10px 30px rgba(250, 224, 19, 0.4);
+          min-width: 200px;
+          font-size: 1.1rem;
+        " disabled>
+          <i class="fas fa-credit-card me-2"></i>BOOK NOW
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * Global vars for modal
+ */
+let currentFlightId = 0;
+let selectedFareType = '';
+let selectedPrice = 0;
+let flightData = {}; // Store full flight info
+
+/**
+ * Populate modal with specific flight's fares
+ */
+function populatePricesModal(flightId) {
+  const faresContent = document.getElementById('modalFaresContent');
+  const flightCard = document.querySelector(`[data-flight-id="${flightId}"]`) || 
+                    Array.from(document.querySelectorAll('.flight-card')).find(card => card.querySelector(`[data-flight-id="${flightId}"]`));
+  
+  if (!flightCard) {
+    faresContent.innerHTML = '<div class="text-center text-danger py-5"><i class="fas fa-exclamation-triangle fa-3x mb-3"></i><h5>Flight details not found</h5></div>';
+    return;
+  }
+
+  // Extract flight info (could be enhanced with data attributes)
+  currentFlightId = flightId;
+  flightData = {
+    id: flightId,
+    from_city: '<?php echo addslashes($from_city); ?>',
+    to_city: '<?php echo addslashes($to_city); ?>'
+  };
+
+  // Create 3 fare cards horizontally
+  const faresHtml = `
+    <div class="row g-3 justify-content-center" style="max-width: 1000px; margin: 0 auto;">
+      <!-- Saver -->
+      <div class="col-md-4 col-sm-12">
+        <div class="fare-card-modal saver text-center p-4 h-100 position-relative" data-fare="Saver">
+          <div class="position-absolute top-0 start-50 translate-middle-x mt-2 px-2 py-1 bg-success text-white small rounded-pill shadow">Saver</div>
+          <input type="radio" class="fare-radio btn-check position-absolute top-2 end-2" name="modalFare" value="Saver" id="saverRadio" data-price="${flightCard.dataset.saverPrice || 8500}">
+          <label for="saverRadio" class="fare-radio-label d-block w-100 h-100 p-3">
+            <div class="h2 fw-bold text-primary mb-3" style="font-size: 2rem;">₹<span class="saver-price">8500</span></div>
+            <i class="fas fa-suitcase fa-2x text-success mb-3"></i>
+            <div class="mb-3">
+              <small class="text-muted d-block">Check-in: 20kg</small>
+              <small class="text-muted d-block">Cabin: 7kg</small>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted d-block">Free cancellation upto 24h prior</small>
+              <small class="text-muted d-block">₹2000 change fee</small>
+            </div>
+            <div class="text-success small fw-bold">
+              <i class="fas fa-chair fa-xs me-1"></i>Seats 
+              <i class="fas fa-utensils fa-xs me-1 ms-2"></i>Meals 
+              <i class="fas fa-wifi fa-xs ms-2"></i>WiFi
+            </div>
+          </label>
+        </div>
+      </div>
+      
+      <!-- Flexi -->
+      <div class="col-md-4 col-sm-12">
+        <div class="fare-card-modal flexi text-center p-4 h-100 position-relative" data-fare="Flexi">
+          <div class="position-absolute top-0 start-50 translate-middle-x mt-2 px-2 py-1 bg-primary text-white small rounded-pill shadow">Flexi</div>
+          <input type="radio" class="fare-radio btn-check position-absolute top-2 end-2" name="modalFare" value="Flexi" id="flexiRadio" data-price="${flightCard.dataset.flexiPrice || 10000}">
+          <label for="flexiRadio" class="fare-radio-label d-block w-100 h-100 p-3">
+            <div class="h2 fw-bold text-primary mb-3" style="font-size: 2rem;">₹<span class="flexi-price">10000</span></div>
+            <i class="fas fa-star fa-2x text-primary mb-3"></i>
+            <div class="mb-3">
+              <small class="text-muted d-block">Check-in: 30kg</small>
+              <small class="text-muted d-block">Cabin: 8kg + Meal</small>
+            </div>
+            <div class="mb-3">
+              <small class="text-muted d-block">Free changes upto 4h prior</small>
+              <small class="text-muted d-block">₹1000 change fee</small>
+            </div>
+            <div class="text-success small fw-bold">
+              <i class="fas fa-chair fa-xs me-1"></i>Priority Seats 
+              <i class="fas fa-utensils fa-xs me-1 ms-2"></i>Choice Meals 
+              <i class="fas fa-wifi fa-xs ms-2"></i>WiFi
+            </div>
+          </label>
+        </div>
+      </div>
+      
+      <!-- Premium -->
+      <div class="col-md-4 col-sm-12">
+        <div class="fare-card-modal premium text-center p-4 h-100 position-relative" data-fare="Premium">
+          <div class="position-absolute top-0 start-50 translate-middle-x mt-2 px-2 py-1 bg-warning text-dark small rounded-pill shadow">Premium</div>
+          <div class="position-absolute top-2 end-2">
+            <input type="radio" class="fare-radio btn-check" name="fare" value="Premium" id="premiumRadio" data-price="${flightCard.dataset.premiumPrice || 13000}">
+          </div>
+          <label for="premiumRadio" class="fare-radio-label d-block w-100 h-100 p-3">
+            <div class="h2 fw-bold text-primary mb-3" style="font-size: 2rem;">₹<span class="premium-price">13000</span></div>
+            <i class="fas fa-crown fa-2x text-warning mb-3"></i>
+            <Fare Details>
+              <div class="mb-3">
+                <small class="text-muted d-block">Check-in: 40kg Priority</small>
+                <small class="text-muted d-block">Cabin: 10kg + Premium Meal</small>
+              </div>
+              <div class="mb-3">
+                <small class="form-muted d-block">Free unlimited changes</small>
+                <small class="text-muted d-block">No change fees</small>
+              </div>
+              <div class="text-success small fw-bold">
+                <i class="fas fa-chair fa-xs me-1"></i>Premium Seats 
+                <i class="fas fa-utensils fa-xs me-1 ms-2"></i>Premium Meals 
+                <small class="fas fa-wifi fa-xs ms-2"></i>Lounge
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  faresContent.innerHTML = faresHtml;
+  
+  // Extract actual prices from card data or defaults
+  const saverCard = document.querySelector('#fares' + flightId + ' .saver .h4') || { textContent: '8500' };
+  const flexiCard = document.querySelector('#fares' + flightId + ' .flexi .h4') || { textContent: '10000' };
+  const premiumCard = document.queryResetSelector('#fares' + parseInt(flightId) + ' .premium .h4') || { textContent: '13000' };
+  
+  document.querySelector('.saver-price').textContent = saverCard.textContent.replace(/[^0-9]/g, '');
+  document.querySelector('.flexi-price').textContent = flexiCard.textContent.replace(/[^0-9]/g, '');
+  document.querySelector('.premium-price').textContent = premiumCard.textContent.replace(/[^0-9]/g, '');
+  
+  // Reset selection
+  document.getElementById('modalBookNow').disabled = true;
+  document.querySelectorAll('.fare-card-modal').forEach(card => card.classList.remove('selected'));
+  
+  // Attach event listeners after DOM update
+  setTimeout(() => {
+    document.querySelectorAll('.fare-radio').forEach(radio => {
+      radio.addEventListener('change', function() {
+        selectedFareType = this.value;
+        selectedPrice = parseFloat(this.dataset.price);
+        document.querySelectorAll('.fare-card-modal').forEach(c => c.classList.remove('selected'));
+        this.closest('.fare-card-modal').classList.add('selected');
+        document.getElementById('modalBookNow').disabled = false;
+      });
+    });
+    
+    // BOOK NOW click
+    document.getElementByName('modalBookNow').addEventListener('click', function() {
+      if (selectedFareType && selectedPrice) {
+        // Save to session via PHP endpoint or form
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'set_session.php';
+        form.style.display = 'none';
+        
+        const inputs = [
+          {name: 'flight_id', value: currentFlightId},
+          {name: 'fare_type', value: selectedFareType},
+          {name: 'price', value: selectedPrice},
+          {name: 'from_city', value: flightData.from_city},
+          {name: 'to_city', value: flightData.to_city}
+        ];
+        
+        inputs.forEach(inputData => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = inputData.name;
+          input.value = inputData.value;
+          form.appendChild(input);
+        });
+        
+        document.body.appendChild(form);
+        form.submit();
+      }
+    });
+  }, 100);
+}
+
+// Update VIEW PRICES buttons to use modal
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.view-prices').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const flightId = this.dataset.flightId;
+      const modal = new bootstrap.Modal(document.getElementById('pricesModal'));
+      populatePricesModal(flightId);
+      modal.show();
+    });
+  });
+});
+</script>
+
+<!-- Required CSS for Modal (add to results.css later) -->
+<style>
+.fare-card-modal {
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.fare-card-modal:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.fare-card-modal.selected {
+  border-color: #1c1450;
+  box-shadow: 0 0 0 4px rgba(28, 20, 80, 0.2);
+  background: linear-gradient(145deg, white, #f8f9ff);
+}
+
+.fare-radio-label {
+  padding-top: 40px !important;
+}
+
+.btn-check:checked + .fare-radio-label {
+  border-color: #1c1450;
+}
+
+#pricesModal .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 1rem;
+  }
+  .fare-card-modal {
+    margin-bottom: 1rem;
+  }
+}
+</style>

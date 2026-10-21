@@ -1,0 +1,88 @@
+# PLAN & GO - Improved .htaccess for Clean PHP URLs
+# ==================================================
+# MOD_REWRITE SETUP
+# ==================================================
+RewriteEngine On
+RewriteBase /plan-go/
+
+# ==================================================
+# 1. SKIP REAL FILES AND FOLDERS FIRST
+# Do NOT rewrite actual files and directories
+# ==================================================
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ==================================================
+# 2. ROOT HOMEPAGE
+# /plan-go/ loads index.php
+# ==================================================
+RewriteRule ^$ index.php [L]
+
+# ==================================================
+# 3. HTML TO PHP REDIRECTS (302 - Non-cached)
+# Old .html URLs redirect to matching .php pages
+# Uses 302 for localhost development safety
+# ==================================================
+
+# Root-level HTML redirects (if any exist)
+RewriteRule ^index\.html$ index.php [R=302,L]
+
+# main_site subdirectory HTML redirects
+RewriteRule ^main_site/about/index\.html$ /plan-go/main_site/about/index.php [R=302,L]
+RewriteRule ^main_site/contact/index\.html$ /plan-go/main_site/contact/index.php [R=302,L]
+RewriteRule ^main_site/all-destinations/index\.html$ /plan-go/main_site/all-destinations/index.php [R=302,L]
+RewriteRule ^main_site/service/index\.html$ /plan-go/main_site/service/index.php [R=302,L]
+RewriteRule ^main_site/service1/index\.html$ /plan-go/main_site/service1/index.php [R=302,L]
+RewriteRule ^main_site/inquiry/index\.html$ /plan-go/main_site/inquiry/index.php [R=302,L]
+RewriteRule ^main_site/domestic/index\.html$ /plan-go/domestic.php [R=302,L]
+RewriteRule ^main_site/international/index\.html$ /plan-go/international.php [R=302,L]
+
+# ==================================================
+# 4. CLEAN URL INTERNAL REWRITES
+# Maps clean URLs to actual PHP files
+# (Consolidated - single rule per URL)
+# ==================================================
+
+# Root-level page rewrites (if PHP files exist in root)
+RewriteRule ^packages$ packages.php [L]
+RewriteRule ^destination$ destination.php [L]
+RewriteRule ^domestic$ domestic.php [L]
+RewriteRule ^international$ international.php [L]
+RewriteRule ^unexplored$ unexplored.php [L]
+RewriteRule ^weekend-gateways$ weekend_gateways.php [L]
+RewriteRule ^login$ login.php [L]
+RewriteRule ^logout$ logout.php [L]
+RewriteRule ^register$ register.php [L]
+
+# Booking pages - keep as-is for mixed HTML/PHP
+RewriteRule ^flight-booking$ flight_booking.php [L]
+RewriteRule ^hotel-booking$ hotel_booking.html [L]
+RewriteRule ^train-booking$ train_booking.html [L]
+RewriteRule ^bus-booking$ bus_booking.html [L]
+
+# main_site subfolder pages (both index.html AND index.php exist)
+# NOTE: These have both .html and .php versions - prefer .php internally
+RewriteRule ^about$ main_site/about/index.php [L]
+RewriteRule ^contact$ main_site/contact/index.php [L]
+RewriteRule ^all-destinations$ main_site/all-destinations/index.php [L]
+RewriteRule ^service$ main_site/service/index.php [L]
+RewriteRule ^service1$ main_site/service1/index.php [L]
+RewriteRule ^inquiry$ main_site/inquiry/index.php [L]
+RewriteRule ^flight-booking$ main_site/flight_booking.php [L]
+
+# ==================================================
+# 6. EXISTING CATEGORY REDIRECTS (KEPT)
+# These work - keep as-is
+# ==================================================
+RewriteRule ^main_site/domestic(/.*)?$ /plan-go/packages.php?cat=domestic [R=302,L]
+RewriteRule ^main_site/international(/.*)?$ /plan-go/packages.php?cat=international [R=302,L]
+RewriteRule ^main_site/unexplored(/.*)?$ /plan-go/packages.php?cat=unexplored [R=302,L]
+RewriteRule ^main_site/weekendgateways(/.*)?$ /plan-go/packages.php?cat=weekend_gateways [R=302,L]
+
+# ==================================================
+# 7. PHP FILE DIRECT ACCESS
+# Allow direct .php file access
+# ==================================================
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]

@@ -1,0 +1,308 @@
+:root {
+    --primary: #1c1450;
+    --accent: #fae013;
+    --white: #ffffff;
+    --gray-light: #f8fafc;
+    --gray-medium: #64748b;
+    --gray-200: #e2e8f0;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --border-radius: 16px;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-lg: 0 25px 70px rgba(28,20,80,0.2);
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --blur: blur(25px);
+}
+
+* { 
+    font-family: 'Poppins', 'Inter', system-ui, -apple-system, sans-serif !important; 
+    box-sizing: border-box; 
+}
+
+body { 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh; 
+}
+
+/* Header Glassmorphism */
+.header {
+    background: rgba(28,20,80,0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* Main Search Card */
+.search-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+}
+
+/* Field Glassmorphism Enhanced */
+.search-field {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.search-field:hover {
+    background: rgba(255,255,255,0.95);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(28,20,80,0.25);
+}
+
+/* Swap Button Glow */
+.swap-icon {
+    box-shadow: 0 8px 32px rgba(28,20,80,0.3);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.swap-icon:hover {
+    transform: scale(1.1) rotate(180deg);
+    box-shadow: 0 12px 40px rgba(250,224,19,0.4);
+}
+
+/* Search Button Premium */
+.search-btn {
+    background: linear-gradient(135deg, var(--primary), #2d1a68);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 20px 60px rgba(28,20,80,0.4);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.search-btn:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 35px 90px rgba(28,20,80,0.5);
+}
+
+/* Modal Glassmorphism */
+.city-modal-content {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 35px 100px rgba(0,0,0,0.3);
+}
+
+.cat-tab.active {
+    background: linear-gradient(135deg, var(--primary), #2d1a68);
+    box-shadow: 0 8px 25px rgba(28,20,80,0.4);
+}
+
+/* Category Tabs */
+.category-tabs {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.cat-tab {
+    position: relative;
+    overflow: hidden;
+}
+
+.cat-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+    box-shadow: 0 4px 15px rgba(250,224,19,0.6);
+}
+
+/* Floating Labels Effect */
+.field-label {
+    position: relative;
+    transition: all 0.3s ease;
+    transform: translateY(12px);
+    transform-origin: left;
+}
+
+.field-content:focus-within .field-label {
+    transform: translateY(-10px) scale(0.8);
+    color: var(--primary);
+}
+
+/* Pulse Animation for Search */
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 0 0 rgba(250,224,19,0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(250,224,19,0); }
+    100% { box-shadow: 0 0 0 0 rgba(250,224,19,0); }
+}
+
+.search-btn {
+    animation: pulse-glow 2s infinite;
+}
+
+/* Enhanced Hover Glow on Cards */
+.search-field::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(250,224,19,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.search-field:hover::before {
+    opacity: 1;
+}
+
+/* Responsive Glass */
+@media (max-width: 768px) {
+    .search-card {
+        margin: 20px;
+        border-radius: 20px;
+    }
+    
+    .search-field:hover {
+        transform: none;
+    }
+}
+
+/* Travellers Modal */
+.trav-modal-content {
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(25px);
+    border: 1px solid var(--glass-border);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    background: rgba(28,20,80,0.98);
+    backdrop-filter: blur(30px);
+}
+
+/* FORCE HORIZONTAL SEARCH BAR FIX - Slim Professional Strip */
+.search-card {
+    width: 95% !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+
+@media (min-width: 769px) {
+    .search-row {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 0 !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        padding: 0 12px !important;
+        align-items: stretch !important;
+    }
+
+    /* FROM and TO: Equal 50/50 symmetry flex:1, compact */
+    .search-row > .search-field:nth-child(1),
+    .search-row > .search-field:nth-child(3) {
+        flex: 1 !important;
+        border: 1px solid #ddd !important;
+        padding: 8px 36px 8px 48px !important; /* right padding for swap */
+        min-height: auto !important;
+        height: 100% !important;
+        position: relative !important;
+        margin: 0 !important;
+    }
+
+    /* Perfect centered swap arrow */
+    .swap-area {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 10 !important;
+        flex: none !important;
+        width: 40px !important;
+        height: 40px !important;
+        margin: 0 !important;
+        background: #f8fafc !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .swap-icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    /* Other fields: DEPART, RETURN, TRAVELLERS flex:1 compact */
+    .search-row > .search-field:nth-child(4),
+    .search-row > .search-field:nth-child(5),
+    .search-row > .search-field:nth-child(6) {
+        flex: 1 !important;
+        padding: 8px 16px !important;
+        min-height: auto !important;
+        height: 100% !important;
+        border-left: 1px solid #e8ecf4 !important;
+        border-right: 1px solid #e8ecf4 !important;
+        margin: 0 !important;
+    }
+
+    /* SEARCH Button: Last in row, full height, end */
+    .search-btn {
+        position: static !important;
+        height: 100% !important;
+        flex: 1.5 !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        border-radius: 0 12px 12px 0 !important;
+        margin: 0 !important;
+        padding: 0 24px !important;
+        white-space: nowrap !important;
+        font-size: 14px !important;
+        background: #1c1450 !important;
+    }
+
+    /* Compact typography */
+    .field-label {
+        font-size: 11px !important;
+        line-height: 1.1 !important;
+        margin-bottom: 0 !important;
+    }
+    .city-primary {
+        font-size: 18px !important;
+        line-height: 1.1 !important;
+    }
+    .city-secondary {
+        font-size: 11px !important;
+    }
+    .field-icon {
+        font-size: 14px !important;
+    }
+
+    /* Remove vertical gaps */
+    .field-content {
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+        gap: 0 !important;
+    }
+    .search-field {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+}
+
